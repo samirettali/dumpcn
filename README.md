@@ -1,8 +1,9 @@
 # DumpCN
 
-A simple script that reads a list of domains from standard input, grabs the
-certificate and prints the CN. By default it runs 32 threads (goroutines
-actually).
+A simple script that reads a list of domains (starting with `https://` or
+not) from standard input, grabs the certificate and prints the CN. By default it
+runs 32 threads (goroutines actually).
+
 
 Running it against
 [opendns-top-domains.txt](https://raw.githubusercontent.com/opendns/public-domain-lists/master/opendns-top-domains.txt)
