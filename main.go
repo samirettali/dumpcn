@@ -55,7 +55,7 @@ func worker(jobChan <-chan string, resChan chan<- string, wg *sync.WaitGroup) {
 
 }
 func main() {
-	workers := flag.Int("workers", 32, "numbers of workers")
+	workers := flag.Int("t", 32, "numbers of threads")
 	flag.Parse()
 
 	scanner := bufio.NewScanner(os.Stdin)

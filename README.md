@@ -10,7 +10,7 @@ Running it against
 (10000 domains) takes approximately 1.5 seconds:
 ```
 $ time ./dumpcn -workers=100 < opendns-top-domains.txt > /dev/null
-./dumpcn -workers=100 < opendns-top-domains.txt > /dev/null  1,66s user 1,24s system 39% cpu 7,311 total
+./dumpcn -t=100 < opendns-top-domains.txt > /dev/null  1,66s user 1,24s system 39% cpu 7,311 total
 ```
 
 ## Installation
@@ -27,5 +27,5 @@ $ cat domains.txt | ./dumpcn
 
 Change number of threads:
 ```
-$ cat domains.txt | ./dumpcn -workers=100
+$ cat domains.txt | ./dumpcn -t=100
 ```
