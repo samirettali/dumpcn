@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"strings"
 	"sync"
 	"time"
 )
@@ -31,6 +32,10 @@ func worker(jobChan <-chan string, resChan chan<- string, wg *sync.WaitGroup) {
 		job, ok := <-jobChan
 		if !ok {
 			return
+		}
+
+		if !strings.HasPrefix(job, "https://") {
+			job = "https://" + job
 		}
 
 		req, reqErr := http.NewRequest("GET", job, nil)
