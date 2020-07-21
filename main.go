@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"crypto/tls"
 	"flag"
 	"fmt"
 	"log"
@@ -21,6 +22,7 @@ func worker(jobChan <-chan string, resChan chan<- string, wg *sync.WaitGroup) {
 			Timeout: 5 * time.Second,
 		}).Dial,
 		TLSHandshakeTimeout: 5 * time.Second,
+		TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 	}
 
 	var client = &http.Client{
@@ -48,8 +50,8 @@ func worker(jobChan <-chan string, resChan chan<- string, wg *sync.WaitGroup) {
 			continue
 		}
 
-		if resp.TLS != nil && len(resp.TLS.VerifiedChains) > 0 && len(resp.TLS.VerifiedChains[0]) > 0 {
-			resChan <- resp.TLS.VerifiedChains[0][0].Subject.CommonName
+		if resp.TLS != nil && len(resp.TLS.PeerCertificates) > 0 {
+			resChan <- resp.TLS.PeerCertificates[0].Subject.CommonName
 		}
 	}
 
