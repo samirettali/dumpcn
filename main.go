@@ -40,7 +40,7 @@ func worker(jobChan <-chan string, resChan chan<- string, wg *sync.WaitGroup) {
 			job = "https://" + job
 		}
 
-		req, reqErr := http.NewRequest("GET", job, nil)
+		req, reqErr := http.NewRequest("HEAD", job, nil)
 		if reqErr != nil {
 			continue
 		}
