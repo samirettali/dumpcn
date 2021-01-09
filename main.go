@@ -30,14 +30,11 @@ func worker(jobChan <-chan string, resChan chan<- string, wg *sync.WaitGroup) {
 		Transport: transport,
 	}
 
-	for {
-		job, ok := <-jobChan
-		if !ok {
-			return
-		}
-
+	for job := range jobChan {
 		if !strings.HasPrefix(job, "https://") {
 			job = "https://" + job
+		} else if strings.HasPrefix(job, "http://") {
+			job = strings.Replace(job, "http://", "https://", 1)
 		}
 
 		req, reqErr := http.NewRequest("HEAD", job, nil)
