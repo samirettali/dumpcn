@@ -1,7 +1,7 @@
 # dumpcn
 
-A tool that takes a list of domains from standard input (prefixed with `https://` or
-not), grabs the certificate and prints the CN.
+A tool that takes a list of domains from standard input (prefixed with the
+protocol or not), grabs the certificate and prints the CN.
 
 It runs on 32 threads (goroutines) by default.
 
