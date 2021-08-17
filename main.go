@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-func worker(jobChan <-chan string, resChan chan<- string, wg *sync.WaitGroup) {
+func worker(jobChan <-chan string, resChan chan<- string, wg *sync.WaitGroup, includeSANs bool) {
 	defer wg.Done()
 
 	var transport = &http.Transport{
@@ -48,6 +48,12 @@ func worker(jobChan <-chan string, resChan chan<- string, wg *sync.WaitGroup) {
 		}
 
 		if resp.TLS != nil && len(resp.TLS.PeerCertificates) > 0 {
+			if includeSANs {
+				dnsNames := resp.TLS.PeerCertificates[0].DNSNames
+				for _, name := range dnsNames {
+					resChan <- string(name)
+				}
+			}
 			resChan <- resp.TLS.PeerCertificates[0].Subject.CommonName
 		}
 	}
@@ -55,6 +61,7 @@ func worker(jobChan <-chan string, resChan chan<- string, wg *sync.WaitGroup) {
 }
 func main() {
 	workers := flag.Int("t", 32, "numbers of threads")
+	includeSANs := flag.Bool("s", false, "print SANs")
 	flag.Parse()
 
 	scanner := bufio.NewScanner(os.Stdin)
@@ -71,7 +78,7 @@ func main() {
 	}()
 
 	for i := 0; i < *workers; i++ {
-		go worker(jobChan, resChan, &wg)
+		go worker(jobChan, resChan, &wg, *includeSANs)
 	}
 
 	go func() {
