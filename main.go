@@ -48,6 +48,10 @@ func worker(jobChan <-chan string, resChan chan<- string, wg *sync.WaitGroup) {
 		}
 
 		if resp.TLS != nil && len(resp.TLS.PeerCertificates) > 0 {
+			dnsNames := resp.TLS.PeerCertificates[0].DNSNames
+			for _, name := range dnsNames {
+				resChan <- string(name)
+			}
 			resChan <- resp.TLS.PeerCertificates[0].Subject.CommonName
 		}
 	}
